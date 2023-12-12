@@ -1,0 +1,23 @@
+.footer-container {
+    background-color: #3498db; 
+    color: #fff; 
+    padding: 20px 0;
+    position: sticky;
+    width: 100%;
+    z-index: 100;
+    margin-top: 25px;
+  }
+
+  .footer-container p{
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .footer-container a {
+    color: #fff; 
+    text-decoration: none;
+  }
+  
+  .footer-container a:hover {
+    text-decoration: underline; 
+  }

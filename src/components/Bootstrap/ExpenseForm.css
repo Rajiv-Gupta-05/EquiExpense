@@ -1,0 +1,69 @@
+
+.expense-form-container {
+    max-width: 550px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .expense-form-header {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .expense-form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: -10px;
+  }
+  
+  .expense-form-group input,
+  .expense-form-group .form-check-input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .friend-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  
+  .form-check-label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-right: 3px solid #0b6088;
+    padding-left: 5px;
+    padding-right: 5px;
+  
+    
+  }
+  
+  .add{
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;  }
+  
+  .add:hover {
+    background-color: #0056b3;
+    color: #f0f0f0;
+    transform: scale(1.1);
+  }
+
+
+  
+  

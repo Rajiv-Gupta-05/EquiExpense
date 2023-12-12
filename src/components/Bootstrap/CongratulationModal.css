@@ -1,0 +1,23 @@
+
+.congratulation-modal {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .congratulation-content {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .congratulation-header {
+    background-color: #d4edda; 
+    color: #155724; 
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .congratulation-button {
+    margin-top: 15px;
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
