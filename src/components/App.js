@@ -55,31 +55,38 @@ class App extends Component {
   };
 
   handleAddExpense = (expense) => {
-    const { description, amount, selectedFriends } = expense;
-
-    if (selectedFriends.length === 0) {
+    const { description, amount, selectedFriends, isUnequalSplit, friendShares } = expense;
+  
+    if (!selectedFriends || selectedFriends.length === 0) {
       this.setState({
         showModal: true,
       });
       return;
     }
-
-    const expensePerFriend = amount / selectedFriends.length;
-
+  
+    const newExpense = {
+      id: uuidv4(),
+      description,
+      amount,
+      timestamp: Date.now(),
+      friendShares: {},
+    };
+  
+    if (isUnequalSplit) {
+      // Unequal split logic
+      Object.entries(friendShares).forEach(([friendId, share]) => {
+        newExpense.friendShares[friendId] = parseFloat(share);
+      });
+    } else {
+      // Equal split logic
+      const equalShare = amount / selectedFriends.length;
+      selectedFriends.forEach((friendId) => {
+        newExpense.friendShares[friendId] = equalShare;
+      });
+    }
+  
     this.setState((prevState) => ({
-      expenses: [
-        ...prevState.expenses,
-        {
-          id: uuidv4(),
-          description,
-          amount,
-          timestamp: Date.now(),
-          friendShares: selectedFriends.reduce((shares, friendId) => {
-            const updatedShare = (shares[friendId] || 0) + expensePerFriend;
-            return { ...shares, [friendId]: updatedShare };
-          }, {}),
-        },
-      ],
+      expenses: [...prevState.expenses, newExpense],
       friends: selectedFriends.reduce((updatedFriends, friendId) => {
         if (!prevState.friends.find((friend) => friend.id === friendId)) {
           return [
@@ -95,7 +102,7 @@ class App extends Component {
       showPopup: true,
       popupMessage: "Expense added successfully!",
     }));
-
+  
     setTimeout(() => {
       this.setState({
         showPopup: false,
@@ -103,6 +110,7 @@ class App extends Component {
       });
     }, 2000);
   };
+  
 
   handleSettleExpenses = ({ friendId, amount }) => {
     const { friends } = this.state;
