@@ -10,6 +10,7 @@ import AutoDismissPopup from "./AutoDismissPopup";
 import PopupModal from "./PopupModal";
 import SettleExpensesModal from "./SettleExpenseModal";
 import CongratulationModal from "./CongratulationModal";
+import GroupList from "./Group";
 import { v4 as uuidv4 } from "uuid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
@@ -21,6 +22,7 @@ class App extends Component {
     this.state = {
       friends: [],
       expenses: [],
+      groups: [],
       showPopup: false,
       popupMessage: "",
       showModal: false,
@@ -153,10 +155,22 @@ class App extends Component {
     }, 10000);
   };
 
+  handleAddGroup = (groupName) => {
+    const newGroup = {
+      id: uuidv4(),
+      name: groupName,
+    };
+  
+    this.setState((prevState) => ({
+      groups: [...prevState.groups, newGroup],
+    }));
+  };
+
   render() {
     const {
       friends,
       expenses,
+      groups,
       showPopup,
       popupMessage,
       showModal,
@@ -184,6 +198,7 @@ class App extends Component {
           <Row>
             <Col md={4}>
               <FriendList friends={friends} expenses={expenses} />
+              <GroupList groups={groups} />
               {hasFriends && (
                 <button
                   className="settle-expenses-button"
@@ -197,6 +212,7 @@ class App extends Component {
               <ExpenseForm
                 onAddFriend={this.handleAddFriend}
                 onAddExpense={this.handleAddExpense}
+                onAddGroup={this.handleAddGroup}
                 friends={friends}
               />
               <ExpenseList expenses={expenses} friends={friends} />

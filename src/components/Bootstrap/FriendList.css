@@ -8,3 +8,44 @@
   color: rgb(87, 4, 17) ;
   font-weight: bold;
 }
+
+.friend-list-container {
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: height 0.3s ease;
+  font-family: 'Arial', sans-serif;
+}
+
+.friend-list-header {
+  padding: 10px;
+  background-color: #3498db;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-list-header.active {
+  background-color: #2980b9;
+}
+
+.friend-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.friend-list-item {
+  padding: 10px;
+  border-bottom: 3px solid #ddd;
+  background-color: #ecf0f1;
+  color: #333;
+}
+
+.friend-list-item:last-child {
+  border-bottom: none;
+}
