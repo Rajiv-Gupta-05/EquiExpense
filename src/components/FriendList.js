@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Bootstrap/FriendList.css";
 
 const FriendList = ({ friends, expenses }) => {
+  const [isFriendListVisible, setIsFriendListVisible] = useState(true);
+
   const calculateFriendTotal = (friendId) => {
     if (!expenses) {
       return 0;
@@ -24,34 +26,39 @@ const FriendList = ({ friends, expenses }) => {
       minimumFractionDigits: hasDecimals ? 2 : 0,
       maximumFractionDigits: hasDecimals ? 2 : 0,
     }).format(total);
-   
+
     const textColorClass = total >= 0 ? "text-1" : "text-2";
 
     return { formattedTotal, textColorClass };
   };
 
   return (
-    <div>
-      <h2>
-        Friends <i className="fas fa-users"></i>
+    <div className="friend-list-container">
+      <h2
+        className={`friend-list-header ${isFriendListVisible ? "active" : ""}`}
+        onClick={() => setIsFriendListVisible(!isFriendListVisible)}
+      >
+        Friends <i className={`fas fa-users ${isFriendListVisible ? 'active' : ''}`}></i>
       </h2>
-      <ul>
-        {friends.map((friend) => {
-          const { formattedTotal, textColorClass } = calculateFriendTotal(friend.id);
+      {isFriendListVisible && (
+        <ul className="friend-list">
+          {friends.map((friend) => {
+            const { formattedTotal, textColorClass } = calculateFriendTotal(
+              friend.id
+            );
 
-          return (
-            <li key={friend.id}>
-              <strong className={textColorClass}>{friend.name}</strong>
-              <p>
-                Total Expenses:{" "}
-                <span className={textColorClass}>
-                  {formattedTotal}
-                </span>
-              </p>
-            </li>
-          );
-        })}
-      </ul>
+            return (
+              <li key={friend.id} className="friend-list-item">
+                <strong className={textColorClass}>{friend.name}</strong>
+                <p>
+                  Total Expenses:{" "}
+                  <span className={textColorClass}>{formattedTotal}</span>
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };

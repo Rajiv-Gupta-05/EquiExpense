@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 import "./Bootstrap/ExpenseForm.css";
+import GroupPopup from "./GroupPopup";
 
-const ExpenseForm = ({ onAddFriend, onAddExpense, friends }) => {
+const ExpenseForm = ({ onAddFriend, onAddExpense, onAddGroup, friends }) => {
   const [friendName, setFriendName] = useState("");
   const [expense, setExpense] = useState({
     description: "",
@@ -11,6 +12,8 @@ const ExpenseForm = ({ onAddFriend, onAddExpense, friends }) => {
     isUnequalSplit: false,
     friendShares: {},
   });
+
+  const [showGroupPopup, setShowGroupPopup] = useState(false);
 
   const handleChangeFriend = (e) => {
     setFriendName(e.target.value);
@@ -76,6 +79,14 @@ const ExpenseForm = ({ onAddFriend, onAddExpense, friends }) => {
         friendShares: {},
       });
     }
+  };
+
+  const handleShowGroupPopup = () => {
+    setShowGroupPopup(true);
+  };
+
+  const handleCloseGroupPopup = () => {
+    setShowGroupPopup(false);
   };
 
   return (
@@ -155,9 +166,14 @@ const ExpenseForm = ({ onAddFriend, onAddExpense, friends }) => {
         <button className="add" onClick={handleAddFriend}>
           Add Friend
         </button>
-        <button className="add" onClick={handleAddFriend}>
+        <button className="add" onClick={handleShowGroupPopup}>
           Add Group
         </button>
+        <GroupPopup
+          show={showGroupPopup}
+          handleClose={handleCloseGroupPopup}
+          onAddGroup={onAddGroup}
+        />
       </div>
       <div className="expense-form-group">
         <h3>
@@ -174,7 +190,10 @@ const ExpenseForm = ({ onAddFriend, onAddExpense, friends }) => {
                 onChange={() => handleToggleFriend(friend.id)}
                 className="form-check-input"
               />
-              <label htmlFor={`checkbox-${friend.id}`} className="form-check-label">
+              <label
+                htmlFor={`checkbox-${friend.id}`}
+                className="form-check-label"
+              >
                 {friend.name}
               </label>
             </div>
