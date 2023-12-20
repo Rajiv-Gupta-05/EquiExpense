@@ -74,3 +74,22 @@ body {
   }
 }
 
+.home-button {
+  display: inline-block;
+  text-decoration: none;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #ad492a, #c54fb5);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.home-button:hover {
+  background: linear-gradient(45deg, #c54fb5, #ad492a);
+  color: white}
+

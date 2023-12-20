@@ -14,6 +14,9 @@ import GroupList from "./Group";
 import { v4 as uuidv4 } from "uuid";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../App.css";
+import GroupPage from "./GroupPage";
+import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -57,15 +60,21 @@ class App extends Component {
   };
 
   handleAddExpense = (expense) => {
-    const { description, amount, selectedFriends, isUnequalSplit, friendShares } = expense;
-  
+    const {
+      description,
+      amount,
+      selectedFriends,
+      isUnequalSplit,
+      friendShares,
+    } = expense;
+
     if (!selectedFriends || selectedFriends.length === 0) {
       this.setState({
         showModal: true,
       });
       return;
     }
-  
+
     const newExpense = {
       id: uuidv4(),
       description,
@@ -73,7 +82,7 @@ class App extends Component {
       timestamp: Date.now(),
       friendShares: {},
     };
-  
+
     if (isUnequalSplit) {
       // Unequal split logic
       Object.entries(friendShares).forEach(([friendId, share]) => {
@@ -86,7 +95,7 @@ class App extends Component {
         newExpense.friendShares[friendId] = equalShare;
       });
     }
-  
+
     this.setState((prevState) => ({
       expenses: [...prevState.expenses, newExpense],
       friends: selectedFriends.reduce((updatedFriends, friendId) => {
@@ -104,7 +113,7 @@ class App extends Component {
       showPopup: true,
       popupMessage: "Expense added successfully!",
     }));
-  
+
     setTimeout(() => {
       this.setState({
         showPopup: false,
@@ -112,7 +121,6 @@ class App extends Component {
       });
     }, 2000);
   };
-  
 
   handleSettleExpenses = ({ friendId, amount }) => {
     const { friends } = this.state;
@@ -160,7 +168,7 @@ class App extends Component {
       id: uuidv4(),
       name: groupName,
     };
-  
+
     this.setState((prevState) => ({
       groups: [...prevState.groups, newGroup],
     }));
@@ -186,84 +194,105 @@ class App extends Component {
     );
 
     return (
-      <Container fluid className="App">
-        <Header
-          dark={true}
-          headerClassName="justify-content-center"
-          className="Header"
-        >
-          EquiExpense
-        </Header>
-        <Container className="custom-container">
-          <Row>
-            <Col md={4}>
-              <FriendList friends={friends} expenses={expenses} />
-              <GroupList groups={groups} />
-              {hasFriends && (
-                <button
-                  className="settle-expenses-button"
-                  onClick={() => this.setState({ showSettleModal: true })}
-                >
-                  <i className="fa-regular fa-handshake"></i> Settle Expenses
-                </button>
-              )}
-            </Col>
-            <Col md={8}>
-              <ExpenseForm
-                onAddFriend={this.handleAddFriend}
-                onAddExpense={this.handleAddExpense}
-                onAddGroup={this.handleAddGroup}
-                friends={friends}
-              />
-              <ExpenseList expenses={expenses} friends={friends} />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={8}>
-              <Summary
-                totalAmount={totalAmount}
-                expenses={expenses}
-                friends={friends}
-              />
-            </Col>
-          </Row>
+      <Router>
+        <Container fluid className="App">
+          <Header
+            dark={true}
+            headerClassName="justify-content-center"
+            className="Header"
+          >
+            EquiExpense
+          </Header>
+          <Container className="custom-container">
+            <Row>
+              <Col md={3}>
+                <FriendList friends={friends} expenses={expenses} />
+                <GroupList groups={groups} />
+                {hasFriends && (
+                  <button
+                    className="settle-expenses-button"
+                    onClick={() => this.setState({ showSettleModal: true })}
+                  >
+                    <i className="fa-regular fa-handshake"></i> Settle Expenses
+                  </button>
+                )}
+              </Col>
+              <Col md={6}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <React.Fragment>
+                        <ExpenseForm
+                          onAddFriend={this.handleAddFriend}
+                          onAddExpense={this.handleAddExpense}
+                          onAddGroup={this.handleAddGroup}
+                          friends={friends}
+                        />
+                        <ExpenseList expenses={expenses} friends={friends} />
+                      </React.Fragment>
+                    }
+                  />
+                  <Route
+                    path="/group/:groupId"
+                    element={
+                      <React.Fragment>
+                        <GroupPage groups={groups} expenses={expenses} />
+                        <Row className="home-link">
+                          <Link to="/" className="home-button">
+                            Back To Home
+                          </Link>
+                        </Row>
+                      </React.Fragment>
+                    }
+                  />
+                </Routes>
+              </Col>
+              <Col md={3} className="text-right">
+                <Summary
+                  totalAmount={totalAmount}
+                  expenses={expenses}
+                  friends={friends}
+                />
+              </Col>
+            </Row>
+          </Container>
+          {showPopup && (
+            <AutoDismissPopup
+              show={showPopup}
+              handleClose={() =>
+                this.setState({ showPopup: false, popupMessage: "" })
+              }
+              message={popupMessage}
+            />
+          )}
+          {showModal && (
+            <PopupModal
+              show={showModal}
+              handleClose={() => this.setState({ showModal: false })}
+            />
+          )}
+          {hasFriends && (
+            <SettleExpensesModal
+              show={showSettleModal}
+              friends={friends}
+              onSettle={this.handleSettleExpenses}
+              handleClose={() => this.setState({ showSettleModal: false })}
+            />
+          )}
+          {showCongratulationModal && (
+            <CongratulationModal
+              show={showCongratulationModal}
+              handleClose={() =>
+                this.setState({ showCongratulationModal: false })
+              }
+              friendName={congratulationFriendName}
+              settledAmount={settledAmount}
+            />
+          )}
+          <Footer />
         </Container>
-        {showPopup && (
-          <AutoDismissPopup
-            show={showPopup}
-            handleClose={() =>
-              this.setState({ showPopup: false, popupMessage: "" })
-            }
-            message={popupMessage}
-          />
-        )}
-        {showModal && (
-          <PopupModal
-            show={showModal}
-            handleClose={() => this.setState({ showModal: false })}
-          />
-        )}
-        {hasFriends && (
-          <SettleExpensesModal
-            show={showSettleModal}
-            friends={friends}
-            onSettle={this.handleSettleExpenses}
-            handleClose={() => this.setState({ showSettleModal: false })}
-          />
-        )}
-        {/*  CongratulationModal component */}
-        {showCongratulationModal && (
-          <CongratulationModal
-            show={showCongratulationModal}
-            handleClose={() =>
-              this.setState({ showCongratulationModal: false })
-            }
-            friendName={congratulationFriendName}
-            settledAmount={settledAmount}
-          />
-        )}
-        <Footer />
-      </Container>
+      </Router>
     );
   }
 }
